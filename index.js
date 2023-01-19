@@ -1,23 +1,27 @@
 const { request, response } = require('express');
 const express = require('express');
 const app = express();
-const morgan = require('morgan');
+const cors = require('cors');
+// const morgan = require('morgan');
 
+app.use(express.static('build'))
+app.use(cors())
 app.use(express.json())
 
-morgan.token('golden', function (req, res) {return JSON.stringify(res.body)})
-const lol = morgan(function (tokens, req, res) {
-    return [
-      tokens.method(req, res),
-      tokens.url(req, res),
-      tokens.status(req, res),
-      tokens.res(req, res, 'content-length'), '-',
-      tokens['response-time'](req, res), 'ms',
-      tokens.golden(req, res)
-    ].join(' ')
-  })
 
-app.use(lol)
+// morgan.token('golden', function (req, res) {return JSON.stringify(res.body)})
+// const lol = morgan(function (tokens, req, res) {
+//     return [
+//       tokens.method(req, res),
+//       tokens.url(req, res),
+//       tokens.status(req, res),
+//       tokens.res(req, res, 'content-length'), '-',
+//       tokens['response-time'](req, res), 'ms',
+//       tokens.golden(req, res)
+//     ].join(' ')
+//   })
+
+// app.use(lol)
 
 const persons = [
     { 
@@ -118,6 +122,6 @@ app.post('/api/persons', (request, response) => {
     response.json(person)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT)
 console.log(`server running on ${PORT}`);
