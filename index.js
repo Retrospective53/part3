@@ -1,12 +1,26 @@
+require('dotenv').config();
+const mongoose = require('mongoose');
 const { request, response } = require('express');
 const express = require('express');
 const app = express();
 const cors = require('cors');
 // const morgan = require('morgan');
 
+const url = process.env.MONGODB_URI
+
+mongoose.connect(url)
+
+const personSchema = new mongoose.Schema({
+    name: String,
+    number: Number
+})
+
+const Person = mongoose.model('Person', personSchema)
+
 app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
+
 
 
 // morgan.token('golden', function (req, res) {return JSON.stringify(res.body)})
@@ -23,28 +37,28 @@ app.use(express.json())
 
 // app.use(lol)
 
-const persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+// const persons = [
+//     { 
+//       "id": 1,
+//       "name": "Arto Hellas", 
+//       "number": "040-123456"
+//     },
+//     { 
+//       "id": 2,
+//       "name": "Ada Lovelace", 
+//       "number": "39-44-5323523"
+//     },
+//     { 
+//       "id": 3,
+//       "name": "Dan Abramov", 
+//       "number": "12-43-234345"
+//     },
+//     { 
+//       "id": 4,
+//       "name": "Mary Poppendieck", 
+//       "number": "39-23-6423122"
+//     }
+// ]
 
 const info = () => {
     return(
@@ -54,7 +68,9 @@ const info = () => {
 }
 
 app.get('/info', (request, response) => {
-    response.send(info())
+    Person.find({}).then(persons => {
+        response.json(persons)
+    })
 })
 
 app.get('/api/persons', (request, response) => {

@@ -1,12 +1,12 @@
-GET http://localhost:3001/api/persons/
+GET https://rose-penguin-cap.cyclic.app/api/persons/
 
 ###
 
-DELETE http://localhost:3001/api/persons/2
+DELETE https://rose-penguin-cap.cyclic.app/api/persons/2
 
 ###
 
-POST http://localhost:3001/api/persons
+POST https://rose-penguin-cap.cyclic.app/api/persons
 Content-Type: application/json
 
 {
