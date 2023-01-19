@@ -1,21 +1,14 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
+const Person = require('./models/person');
 const { request, response } = require('express');
 const express = require('express');
 const app = express();
 const cors = require('cors');
 // const morgan = require('morgan');
 
-const url = process.env.MONGODB_URI
 
-mongoose.connect(url)
 
-const personSchema = new mongoose.Schema({
-    name: String,
-    number: Number
-})
 
-const Person = mongoose.model('Person', personSchema)
 
 app.use(express.static('build'))
 app.use(cors())
@@ -60,6 +53,7 @@ app.use(express.json())
 //     }
 // ]
 
+
 const info = () => {
     return(
         `<p>Phonebook has info for ${persons.length} people</p>` +
@@ -68,13 +62,13 @@ const info = () => {
 }
 
 app.get('/info', (request, response) => {
-    Person.find({}).then(persons => {
-        response.json(persons)
-    })
+    response.send(info())
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({}).then(persona => {
+        response.json(persona)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -108,36 +102,36 @@ const generateId = () => Math.floor(Math.random()*100000)
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    if (persons.some(person => {
-        return person.name == body.name
-    })) {
-        response.status(400).json({
-            error: 'name must be unique'
-        })
-    }
+    // if (persons.some(person => {
+    //     return person.name == body.name
+    // })) {
+    //     response.status(400).json({
+    //         error: 'name must be unique'
+    //     })
+    // }
 
-    else if (!body.name) {
-        return response.status(400).json({
-            error: 'name missing'
-        })
-    }
-    else if (!body.number) {
-        return response.status(400).json({
-            error: 'number missing'
-        })
-    }
+    // else if (!body.name) {
+    //     return response.status(400).json({
+    //         error: 'name missing'
+    //     })
+    // }
+    // else if (!body.number) {
+    //     return response.status(400).json({
+    //         error: 'number missing'
+    //     })
+    // }
 
-    const person = {
+    const person = new Person({
         name: body.name,
-        number: body.number,
-        id: generateId()
-    }
+        number: body.number
+    })
     
-    persons.concat(person)
     console.log(person);
-    response.json(person)
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT)
 console.log(`server running on ${PORT}`);
