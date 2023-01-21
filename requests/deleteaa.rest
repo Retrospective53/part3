@@ -1,11 +1,11 @@
 GET https://rose-penguin-cap.cyclic.app/api/persons/
 
 ###
-GET http://localhost:3001/api/persons/2
+GET http://localhost:3001/api/persons/
 
 ###
 
-DELETE https://rose-penguin-cap.cyclic.app/api/persons/2
+DELETE http://localhost:3001/api/persons/2
 
 ###
 
@@ -15,4 +15,13 @@ Content-Type: application/json
 {
     "name": "Reimari",
     "number": 213123123
+}
+
+###
+PUT http://localhost:3001/api/persons/Cirno
+Content-Type: application/json
+
+{
+    "name": "Sirno",
+    "number": 3242343
 }
